@@ -145,6 +145,24 @@ describe('Broker: 1822direkt', () => {
         tax: 0,
       });
     });
+    test('Can the stock dividend be parsed from the document', () => {
+      const activities = _1822direkt.parsePages(dividendSamples[1]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: '1822direkt',
+        type: 'Dividend',
+        date: '2021-02-11',
+        datetime: '2021-02-11T' + activities[0].datetime.substring(11),
+        isin: 'US0378331005',
+        company: 'APPLE INC.',
+        shares: 200,
+        price: 0.1691,
+        amount: 33.82,
+        fee: 0,
+        tax: 5.07,
+      });
+    });
   });
 
   beforeEach(() => {
