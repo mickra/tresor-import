@@ -140,8 +140,8 @@ export const canParseDocument = (pages, extension) => {
     extension === 'pdf' &&
     firstPageContent.some(
       line =>
-        line.includes(onvista.smartbrokerIdentificationStrings[0]) ||
-        line.includes(onvista.smartbrokerIdentificationStrings[1])
+        line.includes(onvista.negativeIdentificationStrings[0]) ||
+        line.includes(onvista.negativeIdentificationStrings[1])
     ) &&
     getDocumentType(firstPageContent) !== undefined
   );

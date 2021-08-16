@@ -13,6 +13,7 @@ import * as flatex from './flatex';
 import * as ing from './ing';
 import * as onvista from './onvista';
 import * as pb from './postbank';
+import * as sbroker from './sbroker';
 import * as smartbroker from './smartbroker';
 import * as traderepublic from './traderepublic';
 import * as unioninvest from './unioninvest';
@@ -34,6 +35,7 @@ export {
   ing,
   onvista,
   pb,
+  sbroker,
   smartbroker,
   traderepublic,
   unioninvest,

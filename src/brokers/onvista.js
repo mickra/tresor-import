@@ -8,14 +8,13 @@ import {
 } from '@/helper';
 import { findFirstRegexIndexInArray } from '../helper';
 
-// Both smartbroker and onvista use highly similar parsers due to them both being
-// daughter companies from BNP Paribas; a french bank. There is no string which
-// uniquely identifies onvista files so we have to construct a multistring
-// identifcation scheme.
+// Some broker use the same report generator as onvista.
 export const onvistaIdentificationString = 'BELEGDRUCK=J';
-export const smartbrokerIdentificationStrings = [
+// The first two strings are used from smartbroker. The third one from sBroker.
+export const negativeIdentificationStrings = [
   'Landsberger Straße 300',
   'Landsberger Straˇe 300',
+  'SBROKER',
 ];
 
 export const findISIN = text => {
@@ -65,7 +64,7 @@ const findDateDividendFullText = fullText =>
     fullText.indexOf('Zahltag') + 17 // The date with german format has a length of 10 charaters
   );
 
-const findOrderTime = content => {
+export const findOrderTime = content => {
   // Extract the time after the line with Handelszeit which contains "17:33"
   const searchTerm = 'Handelszeit';
   const lineNumber = content.findIndex(t => t.includes(searchTerm));
@@ -411,8 +410,9 @@ export const canParseDocument = (pages, extension) => {
       firstPageText.includes(onvistaIdentificationString)) &&
       !firstPageContent.some(
         line =>
-          line.includes(smartbrokerIdentificationStrings[0]) ||
-          line.includes(smartbrokerIdentificationStrings[1])
+          line.includes(negativeIdentificationStrings[0]) ||
+          line.includes(negativeIdentificationStrings[1]) ||
+          line.includes(negativeIdentificationStrings[2])
       )) ||
       (firstPageContent.some(line =>
         line.includes('Webtrading onvista bank')
