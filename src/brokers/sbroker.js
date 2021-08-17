@@ -9,7 +9,7 @@ import * as onvista from './onvista';
 const findLineNumberByTwoLines = (content, firstLine, secondLine) => {
   let lastLineNumber = 0;
 
-  while (true) {
+  while (lastLineNumber < content.length) {
     let lineNumber = content
       .slice(lastLineNumber)
       .findIndex(line => line === firstLine);
