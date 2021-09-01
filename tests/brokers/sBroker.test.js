@@ -46,6 +46,48 @@ describe('Broker: sBroker', () => {
         },
       ]);
     });
+
+    test('Can parse document: 2021_GB00B24CGK77', () => {
+      const result = sbroker.parsePages(buySamples[1]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Buy',
+          date: '2021-08-03',
+          datetime: '2021-08-03T07:04:00.000Z',
+          isin: 'GB00B24CGK77',
+          company: 'Reckitt Benckiser Group Registered Shares LS -,10',
+          shares: 15,
+          price: 66.5,
+          amount: 997.5,
+          fee: 9.97,
+          tax: 0,
+        },
+      ]);
+    });
+
+    test('Can parse document: 2021_LU0292096186', () => {
+      const result = sbroker.parsePages(buySamples[2]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Buy',
+          date: '2021-08-05',
+          datetime: '2021-08-05T07:04:00.000Z',
+          isin: 'LU0292096186',
+          company: 'Xtr.Stoxx Gbl Sel.Div.100 Swap Inhaber-Anteile 1D o.N.',
+          shares: 2.042,
+          price: 29.355,
+          amount: 59.94,
+          fee: 0,
+          tax: 0,
+        },
+      ]);
+    });
   });
 
   describe('Sell', () => {
@@ -157,6 +199,50 @@ describe('Broker: sBroker', () => {
           fee: 0,
           tax: 0.38381035393112465,
           fxRate: 1.19317,
+          foreignCurrency: 'USD',
+        },
+      ]);
+    });
+
+    test('Can parse document: 2021_LU0292096186', () => {
+      const result = sbroker.parsePages(dividendSamples[4]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Dividend',
+          date: '2021-05-28',
+          datetime: '2021-05-28T' + result.activities[0].datetime.substring(11),
+          isin: 'LU0292096186',
+          company: 'Xtr.Stoxx Gbl Sel.Div.100 Swap Inhaber-Anteile 1D o.N.',
+          shares: 52.349,
+          price: 1.4288,
+          amount: 74.7962512,
+          fee: 0,
+          tax: 0,
+        },
+      ]);
+    });
+
+    test('Can parse document: 2021_US3765361080', () => {
+      const result = sbroker.parsePages(dividendSamples[5]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          broker: 'sBroker',
+          type: 'Dividend',
+          date: '2021-07-30',
+          datetime: '2021-07-30T' + result.activities[0].datetime.substring(11),
+          isin: 'US3765361080',
+          company: 'Gladstone Commercial Corp. Registered Shares DL -,01',
+          shares: 60,
+          price: 0.10579841238978452,
+          amount: 6.347904743387071,
+          fee: 0,
+          tax: 0.955271322416752,
+          fxRate: 1.18291,
           foreignCurrency: 'USD',
         },
       ]);

@@ -30,20 +30,35 @@ const findLineNumberByTwoLines = (content, firstLine, secondLine) => {
 const isBuy = content => {
   return (
     findLineNumberByTwoLines(content, 'Wertpapierabrechnung', 'Kauf') !==
-    undefined
+      undefined ||
+    findLineNumberByTwoLines(
+      content,
+      'Wertpapierabrechnung',
+      'Kauf Limitauftrag'
+    ) !== undefined
   );
 };
 
 const isSell = content => {
   return (
     findLineNumberByTwoLines(content, 'Wertpapierabrechnung', 'Verkauf') !==
-    undefined
+      undefined ||
+    findLineNumberByTwoLines(
+      content,
+      'Wertpapierabrechnung',
+      'Verkauf Limitauftrag'
+    ) !== undefined
   );
 };
 
 const isDividend = content =>
   content.some(line => line.includes('Dividendengutschrift')) ||
-  content.some(line => line.includes('gnisgutschrift aus Wertpapieren'));
+  content.some(
+    line =>
+      line.includes('gnisgutschrift aus Wertpapieren') ||
+      (content.some(line => line.includes('gnisgutschrift')) &&
+        content.some(line => line.includes('Wertpapieren')))
+  );
 
 const getDocumentType = content => {
   if (isBuy(content)) {
@@ -66,10 +81,21 @@ export const canParseDocument = (pages, extension) => {
 };
 
 const findPrice = (content, fxRate = undefined) => {
-  const price = parseGermanNum(
-    content[content.findIndex(line => line.includes('Kurs')) + 2]
-  );
+  const priceSectionLineNumber = content.indexOf('Kurs');
 
+  let priceValue;
+  if (content[priceSectionLineNumber + 1].length === 3) {
+    // Some documents have the price in the line after the currency
+    // EUR
+    // 294,9400
+    priceValue = content[priceSectionLineNumber + 2];
+  } else {
+    // Sometime the price is on one line with the currency
+    // EUR 66,5000
+    priceValue = content[priceSectionLineNumber + 1].split(' ')[1];
+  }
+
+  const price = parseGermanNum(priceValue);
   if (fxRate === undefined) {
     return price;
   }
@@ -104,6 +130,19 @@ const findPayout = (content, fxRate = undefined) => {
   if (lineNumber < 0) {
     lineNumber = content.indexOf('ttungsbetrag pro St');
     payoutOffset = 3;
+
+    if (lineNumber < 0) {
+      lineNumber = content.indexOf('Dividenden-Betrag pro St');
+      payoutOffset = 3;
+
+      if (lineNumber < 0) {
+        lineNumber = content.indexOf('ttungsbetrag');
+
+        if (lineNumber >= 0 && content[lineNumber + 2] === 'St') {
+          payoutOffset = 5;
+        }
+      }
+    }
 
     if (lineNumber < 0) {
       return undefined;
@@ -166,6 +205,18 @@ const findTax = (content, fxRate = undefined) => {
     if (lineNumber >= 0) {
       total = total.add(
         Big(parseGermanNum(content[lineNumber + 3])).div(fxRate)
+      );
+    }
+  }
+
+  {
+    // withholding tax with percentage on the same line
+    const lineNumber = content.findIndex(line =>
+      line.includes('-Quellensteuer ')
+    );
+    if (lineNumber >= 0) {
+      total = total.add(
+        Big(parseGermanNum(content[lineNumber + 2])).div(fxRate)
       );
     }
   }
