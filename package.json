@@ -13,6 +13,7 @@
     "demo": "serve demo",
     "prepare": "npm run build",
     "start": "concurrently --kill-others \"npm run demo\" \"npm run dev\"",
+    "pretest": "tsc",
     "test": "jest --verbose",
     "debug-test": "node --inspect-brk ./node_modules/.bin/jest --verbose",
     "lint": "eslint .",
@@ -52,6 +53,7 @@
     "prettier": "2.0.5",
     "pretty-quick": "^2.0.1",
     "serve": "^11.3.2",
+    "typescript": "^4.3.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"

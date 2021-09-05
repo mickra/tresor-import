@@ -53,7 +53,7 @@ const findDateBuySell = textArr => {
   return dateLine.match(/[0-9]{2}.[0-9]{2}.[1-2][0-9]{3}/)[0];
 };
 
-const findDateDividend = (textArr, formatId = false) => {
+const findDateDividend = (textArr, formatId = -1) => {
   let date;
   const valutaIdx = textArr.findIndex(t => t.includes('Valuta'));
   if (formatId === 2) {
@@ -132,7 +132,7 @@ const findDividendShares = textArr => {
 
 const findAmount = (textArr, fxRate, foreignCurrency, formatId) => {
   let isInForeignCurrency = false;
-  let amount = 0;
+  let amount;
   // Sometimes orders are split across multiple sells. This needs to be
   // handled differently. There are no tests for split sells in foreign currencies
   // at the moment so issues might arise here

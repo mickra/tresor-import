@@ -228,6 +228,7 @@ const parseSingleTransaction = textArr => {
     foreignCurrency;
   let fee = 0;
   let tax = 0;
+  /** @type {Record<String, any>} */
   let activity;
   let time;
   if (isBuy(textArr)) {
@@ -431,7 +432,7 @@ const parseTransactionReport = pdfPages => {
         activity = parseBuySellTransaction(pdfPage, pageIdx, 'Sell');
         pageIdx += 6;
       } else if (pdfPage[pageIdx] === 'Ausschüttung') {
-        activity = parseDividendTransaction(pdfPage, pageIdx, 'Dividend');
+        activity = parseDividendTransaction(pdfPage, pageIdx);
         pageIdx += 6;
       } else if (pdfPage[pageIdx] === 'Einbuchung') {
         // activity = parseTxInOutTransaction(pdfPage, pageIdx, 'TransferIn');

@@ -22,7 +22,7 @@ const isPageTypeSell = content =>
 
 const isPageTypeDividend = content =>
   content.some(
-    line => 
+    line =>
       line.includes('Ausschüttung Investmentfonds') ||
       line.includes('Dividendengutschrift')
   );
@@ -83,7 +83,10 @@ const findAmount = (content, findTotalAmount) => {
 const findPayoutAmount = content => {
   let currentLineNumber = findLineNumberByContent(content, 'Ausschüttung');
   if (currentLineNumber < 0) {
-    currentLineNumber = findLineNumberByContent(content, 'Dividendengutschrift');
+    currentLineNumber = findLineNumberByContent(
+      content,
+      'Dividendengutschrift'
+    );
   }
   while (!content[currentLineNumber + 2].includes('EUR')) {
     currentLineNumber += 2;
@@ -133,10 +136,10 @@ const parsePage = content => {
     const amountWithoutFees = Big(findAmount(content, false));
     type = 'Sell';
     isin = findISIN(content);
-    company = findCompany(content, false);
+    company = findCompany(content);
     date = findOrderDate(content);
     time = findOrderTime(content);
-    shares = findShares(content, false);
+    shares = findShares(content);
     amount = +amountWithoutFees;
     price = +amountWithoutFees.div(Big(shares));
     fee = +Big(amountWithoutFees).minus(findAmount(content, true));
@@ -145,9 +148,9 @@ const parsePage = content => {
     const amountWithoutTaxes = Big(findPayoutAmount(content));
     type = 'Dividend';
     isin = findISIN(content);
-    company = findCompany(content, true);
+    company = findCompany(content);
     date = findPayDate(content);
-    shares = findShares(content, true);
+    shares = findShares(content);
     amount = +amountWithoutTaxes;
     price = +amountWithoutTaxes.div(Big(shares));
     fee = 0;

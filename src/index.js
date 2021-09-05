@@ -81,7 +81,11 @@ export const parseFile = file => {
       let pages = [];
 
       if (extension === 'pdf') {
-        fileContent = new Uint8Array(e.currentTarget.result);
+        if (typeof e.target.result === 'string') {
+          throw Error('Expected ArrayBuffer - got string');
+        }
+
+        fileContent = new Uint8Array(e.target.result);
         pdfDocument = await pdfjs.getDocument(fileContent).promise;
 
         const loopHelper = Array.from(Array(pdfDocument.numPages)).entries();
@@ -91,7 +95,11 @@ export const parseFile = file => {
           );
         }
       } else {
-        pages.push(e.currentTarget.result.trim().split('\n'));
+        if (typeof e.target.result !== 'string') {
+          throw Error('Expected target to be a string');
+        }
+
+        pages.push(e.target.result.trim().split('\n'));
       }
 
       resolve({

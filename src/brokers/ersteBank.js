@@ -287,7 +287,7 @@ export const parsePages = content => {
     type = 'Dividend';
     [isin, company] = findCompanyIsinDividend(pdfPagesConcat);
     date = findDateDividend(pdfPagesConcat);
-    amount = findAmountDividend(pdfPagesConcat, fxRate);
+    amount = findAmountDividend(pdfPagesConcat);
     shares = findSharesDividend(pdfPagesConcat);
     price = +Big(amount).div(shares);
     fee = 0;

@@ -306,14 +306,11 @@ export const findFirstSearchtermIndexInArray = (
   searchterms,
   offset = 0
 ) => {
-  Array.min = function (array) {
-    return Math.min.apply(Math, array);
-  };
-
+  /** @type{number[]} */
   let idxArray = [];
   searchterms.forEach(type => {
     idxArray.push(array.slice(offset).indexOf(type));
   });
-  const nextIdx = Array.min(idxArray.filter(lineNumber => lineNumber >= 0));
+  const nextIdx = Math.min(...idxArray.filter(lineNumber => lineNumber >= 0));
   return nextIdx !== Infinity ? nextIdx + offset : -1;
 };
