@@ -276,14 +276,35 @@ const findFee = content => {
 };
 
 const findTax = textArr => {
+  let totalTax = Big(0);
+
   const kapstIdx = textArr.findIndex(t => t.toLowerCase() === 'kapst');
   const solzIdx = textArr.findIndex(t => t.toLowerCase() === 'solz');
 
   const kapst = kapstIdx >= 0 ? textArr[kapstIdx + 3] : null;
   const solz = solzIdx >= 0 ? textArr[solzIdx + 3] : null;
-  const sum = +Big(parseGermanNum(kapst)).plus(Big(parseGermanNum(solz)));
 
-  return Math.abs(sum);
+  totalTax = totalTax.add(parseGermanNum(kapst));
+  totalTax = totalTax.add(parseGermanNum(solz));
+
+  if (totalTax.eq(0)) {
+    // Some documents have an other tax structure...
+    const taxes = [
+      getNumberAfterTermWithOffset(textArr, 'kapitalertragssteuer', 2),
+      getNumberAfterTermWithOffset(textArr, 'solidaritätszuschlag', 2),
+      getNumberAfterTermWithOffset(textArr, 'kirchensteuer', 2),
+    ];
+
+    taxes.forEach(tax => {
+      if (tax === undefined) {
+        return;
+      }
+
+      totalTax = totalTax.add(tax);
+    });
+  }
+
+  return +totalTax;
 };
 
 const findDividendTax = (textArr, amount) => {

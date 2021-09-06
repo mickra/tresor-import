@@ -491,6 +491,28 @@ describe('Broker: Consorsbank', () => {
         },
       ]);
     });
+
+    test('Can parse document: 2021_DE0006047004', () => {
+      const result = consorsbank.parsePages(sellSamples[3]);
+
+      expect(result.status).toEqual(0);
+      expect(result.activities).toEqual([
+        {
+          amount: 2180.22,
+          broker: 'consorsbank',
+          company: 'HEIDELBERGCEMENT AG O.N.',
+          date: '2021-05-10',
+          datetime: '2021-05-10T13:54:11.000Z',
+          fee: 10.4,
+          isin: 'DE0006047004',
+          wkn: '604700',
+          price: 75.18,
+          shares: 29,
+          tax: 117.66,
+          type: 'Sell',
+        },
+      ]);
+    });
   });
 
   describe('Dividend', () => {
