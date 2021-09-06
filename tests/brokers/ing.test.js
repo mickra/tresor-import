@@ -199,6 +199,25 @@ describe('Broker: ING', () => {
         foreignCurrency: 'USD',
       });
     });
+
+    test('Can parse statement: 2022_DE0007100000', () => {
+      const activities = ing.parsePages(buySamples[8]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'ing',
+        type: 'Buy',
+        date: '2020-03-17',
+        datetime: '2020-03-17T07:33:41.000Z',
+        isin: 'DE0007100000',
+        company: 'Daimler AG Namens-Aktien o.N. Nominale',
+        shares: 100,
+        price: 23.885,
+        amount: 2388.5,
+        fee: 10.87,
+        tax: 0,
+      });
+    });
   });
 
   describe('Sell', () => {
@@ -477,6 +496,27 @@ describe('Broker: ING', () => {
         tax: 1.7,
         fxRate: 8.262605,
         foreignCurrency: 'HKD',
+      });
+    });
+
+    test('Can parse document: 2021_US3682872078', () => {
+      const activities = ing.parsePages(dividendsSamples[9]).activities;
+
+      expect(activities.length).toEqual(1);
+      expect(activities[0]).toEqual({
+        broker: 'ing',
+        type: 'Dividend',
+        date: '2021-08-18',
+        datetime: '2021-08-18T' + activities[0].datetime.substring(11),
+        isin: 'US3682872078',
+        company: 'Gazprom PJSC Nam.Akt.(Sp.ADRs)/2 RL 5',
+        shares: 1400,
+        price: 0.2891377620538809,
+        amount: 404.78979343034035,
+        fee: 28.43790445683688,
+        tax: 103.42,
+        fxRate: 1.171324,
+        foreignCurrency: 'USD',
       });
     });
   });
