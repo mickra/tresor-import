@@ -569,6 +569,20 @@ describe('Broker: Flatex', () => {
       expect(result.status).toEqual(7);
       expect(result.activities.length).toEqual(0);
     });
+
+    test('The statement should be ignored: 2021_at_depot_statement', () => {
+      const result = flatex.parsePages(ignoredSamples[2]);
+
+      expect(result.status).toEqual(7);
+      expect(result.activities.length).toEqual(0);
+    });
+
+    test('The statement should be ignored: 2021_de_depot_statement', () => {
+      const result = flatex.parsePages(ignoredSamples[3]);
+
+      expect(result.status).toEqual(7);
+      expect(result.activities.length).toEqual(0);
+    });
   });
 
   beforeEach(() => {
