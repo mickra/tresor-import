@@ -953,7 +953,7 @@ describe('Broker: peaks', () => {
     test('Can parse dividend buy from buy_dividends', () => {
       const result = peaks.parsePages(buySamples[2]);
 
-      expect(result.activities.length).toEqual(4);
+      expect(result.activities.length).toEqual(6);
       expect(result.activities[0]).toEqual({
         broker: 'peaks',
         type: 'Buy',
@@ -980,6 +980,19 @@ describe('Broker: peaks', () => {
         fee: 0,
         tax: 0,
       });
+      expect(result.activities[4]).toEqual({
+        broker: 'peaks',
+        type: 'Buy',
+        date: '2021-05-12',
+        datetime: '2021-05-12T' + result.activities[4].datetime.substring(11),
+        isin: 'LU0484968812',
+        company: 'Xtrackers II ESG EUR Corp Bond UCITS ETF',
+        shares: 0.00194695,
+        price: 157.27,
+        amount: 0.31,
+        fee: 0,
+        tax: 0,
+      });
     });
   });
 
@@ -987,7 +1000,7 @@ describe('Broker: peaks', () => {
     test('Can dividend be parsed from dividend', () => {
       const activities = peaks.parsePages(dividendSamples[0]).activities;
 
-      expect(activities.length).toEqual(4);
+      expect(activities.length).toEqual(6);
       // the buy would be index 0 / 2, but we are looking for the dividend activity,
       // which is index + 1, because it is a copy of the buy activity
       expect(activities[3]).toEqual({
@@ -1016,6 +1029,19 @@ describe('Broker: peaks', () => {
         fee: 0,
         tax: 0,
       });
+      expect(activities[5]).toEqual({
+        broker: 'peaks',
+        type: 'Dividend',
+        date: '2021-05-12',
+        datetime: '2021-05-12T' + activities[5].datetime.substring(11),
+        isin: 'LU0484968812',
+        company: 'Xtrackers II ESG EUR Corp Bond UCITS ETF',
+        shares: 0.00194695,
+        price: 157.27,
+        amount: 0.31,
+        fee: 0,
+        tax: 0,
+      });
     });
   });
 
@@ -1023,7 +1049,7 @@ describe('Broker: peaks', () => {
     test('Can sell be parsed from fees sell', () => {
       const activities = peaks.parsePages(feesSamples[0]).activities;
 
-      expect(activities.length).toEqual(12);
+      expect(activities.length).toEqual(36);
       expect(activities[6]).toEqual({
         broker: 'peaks',
         type: 'Sell',
@@ -1100,6 +1126,32 @@ describe('Broker: peaks', () => {
         price: 157.75,
         amount: 0.03,
         fee: 0.03,
+        tax: 0,
+      });
+      expect(activities[18]).toEqual({
+        broker: 'peaks',
+        type: 'Sell',
+        date: '2021-06-01',
+        datetime: '2021-06-01T' + activities[18].datetime.substring(11),
+        isin: 'IE00B52VJ196',
+        company: 'iShares MSCI Europe SRI UCITS ETF EUR (Acc)',
+        shares: 0.00355332,
+        price: 57.72,
+        amount: 0.21,
+        fee: 0.21,
+        tax: 0,
+      });
+      expect(activities[24]).toEqual({
+        broker: 'peaks',
+        type: 'Sell',
+        date: '2021-06-01',
+        datetime: '2021-06-01T' + activities[24].datetime.substring(11),
+        isin: 'IE00BYVJRP78',
+        company: 'iShares Sustainable MSCI Em Mkt',
+        shares: 0.00566229,
+        price: 7.45,
+        amount: 0.04,
+        fee: 0.04,
         tax: 0,
       });
     });
